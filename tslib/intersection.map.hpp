@@ -21,21 +21,31 @@
 
 namespace tslib {
 
+// templated function that takes in 4 iterators (2 begins and 2 ends) of time series' indices
+// finds the locations in the 2 vectors that intersect
 template <typename T> std::vector<std::pair<size_t, size_t>> intersection_map(T xbeg, T xend, T ybeg, T yend) {
   // max size of intersection is the smaller of the two series
   typename std::iterator_traits<T>::difference_type max_size{
       std::min(std::distance(xbeg, xend), std::distance(ybeg, yend))};
+  // create a vector of pairs of 2 sizes call res    
   std::vector<std::pair<size_t, size_t>> res;
+  // reserve space for the maximum inputs
   res.reserve(max_size);
+  // create iterators be the 2 beginning iterators
   T xp{xbeg}, yp{ybeg};
 
+  // while the 2 iterators are not both at the end
   while (xp != xend && yp != yend) {
+    // if the index of x is smaller than the index of y, increment x
     if (*xp < *yp) {
       ++xp;
     } else if (*yp < *xp) {
+      // if the index of y is smaller than x, increment y
       ++yp;
     } else {
+      // if they are equal, add to the res the distance between the beginning and the current iterator location
       res.push_back(std::make_pair(std::distance(xbeg, xp), std::distance(ybeg, yp)));
+      // increment both x and y
       ++xp;
       ++yp;
     }

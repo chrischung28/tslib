@@ -18,6 +18,10 @@
 
 namespace tslib {
 
+// templated functors
+//  have the common type of X and Y be referred to as RT
+// return operations +, -, *, and /
+
 template <typename X, typename Y> class PlusFunctor {
 public:
   typedef typename std::common_type<X, Y>::type RT;
