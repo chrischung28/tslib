@@ -38,12 +38,13 @@
 #include <tslib/date.policies/date.partition.hpp>
 
 namespace tslib {
-
+  // to handle run time errors from the TSerries class
   class TSeriesError : public std::runtime_error {
   public:
+    // send the error message 
     TSeriesError(const std::string& msg = "") : std::runtime_error(msg) {}
   };
-
+  // templated class with a typename for Date, Data, Dimensions, needs a backend class, as well as a Date Policy
   template <typename TDATE, typename TDATA,
             typename TSDIM,
             template<typename,typename,typename> class TSDATABACKEND,
