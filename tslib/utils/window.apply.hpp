@@ -22,20 +22,27 @@
 #include <tslib/utils/numeric.traits.hpp>
 
 namespace tslib {
-
+  // template class that needs a return type and another templated class (functor?)
   template<typename ReturnType,
 	   template<class> class F>
   class windowApply {
   public:
+    // templated static function to apply
+    // U are iterators of the data 
+    // T is an iterator of the result
     template<typename T, typename U>
     static inline void apply(T ans, U beg, U end, const size_t window) {
-
+      // advance the beginning iterator by the window -1
       std::advance(beg, window - 1);
-
+      // while beginning does not equal end
       while(beg != end) {
-	*ans = F<ReturnType>::apply( beg - (window - 1), beg+1);
-	++beg;
-	++ans;
+        // use the functors apply to work on the current iterator location - (window-1) and the next iterator location
+        // ie. window size 5, beg starts at 0, increment 4 times, so beg is not at 4
+        // beg - (window-1) is 0 and beg + 1 is 5, use the beg+1 to be the ending vector
+        *ans = F<ReturnType>::apply( beg - (window - 1), beg+1);
+        // increment iterators
+        ++beg;
+        ++ans;
       }
     }
   };

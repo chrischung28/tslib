@@ -29,53 +29,60 @@ namespace tslib {
     unsigned int word[2];
   } ieee_type;
 
-
+  // numeric traits
   template<typename T>
   class numeric_traits;
 
+  // template specialization for double
   template<>
   class numeric_traits<double> {
   private:
+    // static function to calculate NA
     static double calculate_NA() {
+      // set a volatile union
       volatile ieee_type ans_ieee;
 
       // do this b/c don't have a good way to determine
       // endianness at compile time
+      
+      // set the answer to NaN
       double ans = std::numeric_limits<double>::quiet_NaN();
-
+      // set the value to be NaN
       ans_ieee.value = ans;
-
+      // if the wor is set, set it to 1954
       if( ans_ieee.word[0] == 0 ) {
         ans_ieee.word[0] = 1954;
       } else {
         ans_ieee.word[1] = 1954;
       }
-
+      // return the value
       return ans_ieee.value;
     }
 
   public:
+    // boolean value if there is an NA
     static const bool has_NA = true;
-
+    // calculate NA value
     static inline double NA() {
       static double na_value = calculate_NA();
       return na_value;
     }
-
+    // checks if in NA value
     static inline bool ISNA(double x) {
       return std::isnan(x);
     }
   };
-
+  // generic specialization
   template<>
   class numeric_traits<int> {
   public:
+    // has NA is true
     static const bool has_NA = true;
-
+    // return the smallest value in int
     static inline int NA() {
       return std::numeric_limits<int>::min();
     }
-
+    // return true if the value passed is the min of int
     static inline bool ISNA(int x) {
       return x == std::numeric_limits<int>::min() ? true : false;
     }
